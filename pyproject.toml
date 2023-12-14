@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "bot-service"
+version = "0.1.0"
+description = "Backend for tg bot"
+authors = ["Vitalii Karniushin <itallix@me.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "bot_service"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+google-cloud-aiplatform = "^1.38.1"
+
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.18.1"
+jupyterlab = "^4.0.9"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
