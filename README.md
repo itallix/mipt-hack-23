@@ -26,3 +26,10 @@
     ```bash
     brew install --cask google-cloud-sdk
     ```
+
+## Running jupyterlab:
+
+```bash
+poetry install
+poetry run jupyter lab
+```
