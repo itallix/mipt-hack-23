@@ -9,7 +9,7 @@ if [ "$1" = "set" ]; then
     token=${3:-$default_token}
     curl "https://api.telegram.org/bot${token}/setWebhook?url=${url}"
 elif [ "$1" = "delete" ]; then
-    token={$2:-$default_token}
+    token=${2:-$default_token}
     curl "https://api.telegram.org/bot${token}/deleteWebhook"
 else
     echo "Unsupported command."
