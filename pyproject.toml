@@ -10,6 +10,10 @@ packages = [{include = "bot_service"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 google-cloud-aiplatform = "^1.38.1"
+google-cloud-logging = "^3.9.0"
+python-telegram-bot = "^20.7"
+flask = {extras = ["async"], version = "^3.0.0"}
+gunicorn = {extras = ["gevent"], version = "^21.2.0"}
 
 
 [tool.poetry.group.dev.dependencies]
