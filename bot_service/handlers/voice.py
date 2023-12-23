@@ -1,7 +1,12 @@
+import logging
 import tempfile
+from os import getenv
 
-from google.cloud import firestore, speech, texttospeech
-from pydub import AudioSegment
+from google.api_core.client_options import ClientOptions
+from google.cloud import firestore, texttospeech
+from google.cloud.speech_v2 import SpeechClient
+from google.cloud.speech_v2.types import cloud_speech
+from langdetect import detect
 from telegram import Update
 from telegram.constants import ChatAction
 from telegram.ext import ContextTypes
@@ -11,6 +16,18 @@ from bot_service.utils.chat_history import from_json, to_json
 from bot_service.utils.markdown import markdown_to_text
 
 CHATS = "Chats"
+TEXTTOSPEECH_PARAMS = {
+    "ru": {
+        "language_code": "ru-RU",
+        "name": "ru-RU-Wavenet-D",
+        "ssml_gender": texttospeech.SsmlVoiceGender.MALE,
+    },
+    "en": {
+        "language_code": "en-US",
+        "name": "en-US-Wavenet-J",
+        "ssml_gender": texttospeech.SsmlVoiceGender.MALE,
+    },
+}
 
 
 def _transcribe_audio(content: bytes) -> str:
@@ -20,24 +37,34 @@ def _transcribe_audio(content: bytes) -> str:
         content: Binary audio content that needs to be transcribed.
 
     Returns:
-        A text that represents an audio.
+        A text that represents the audio.
     """
-    client = speech.SpeechClient()
-    audio = speech.RecognitionAudio(content=content)
+    logging.info("Transcribing audio...")
+    client = SpeechClient(
+        client_options=ClientOptions(
+            api_endpoint="us-central1-speech.googleapis.com",
+        )
+    )
 
     # TODO: move to GCS (currently limited with 60sec)
-    config = speech.RecognitionConfig(
-        encoding=speech.RecognitionConfig.AudioEncoding.MP3,
-        sample_rate_hertz=16000,
-        language_code="ru-RU",
+    config = cloud_speech.RecognitionConfig(
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        language_codes=["auto"],
+        model="chirp",
     )
-    response = client.recognize(config=config, audio=audio)
+    request = cloud_speech.RecognizeRequest(
+        recognizer=f"projects/{getenv('PROJECT_ID')}/locations/us-central1/recognizers/_",
+        config=config,
+        content=content,
+    )
+    response = client.recognize(request)
     transcript = ""
     for result in response.results:
         transcript += result.alternatives[0].transcript
-        print(f"Transcript: {result.alternatives[0].transcript}")
-        print(f"Confidence: {result.alternatives[0].confidence}")
+        logging.debug(f"Transcript: {result.alternatives[0].transcript}")
+        logging.debug(f"Confidence: {result.alternatives[0].confidence}")
 
+    logging.info(f"Transcription finished: {transcript}")
     return transcript
 
 
@@ -52,22 +79,21 @@ def _get_audio_from_text(tmp_dir: str, update_id: int, text: str) -> str:
     Returns:
         A path to the generated audio file
     """
+    logging.info("Generating audio...")
     client = texttospeech.TextToSpeechClient()
     input_text = texttospeech.SynthesisInput(text=text)
-    voice = texttospeech.VoiceSelectionParams(
-        language_code="ru-RU",
-        name="ru-RU-Wavenet-D",
-        ssml_gender=texttospeech.SsmlVoiceGender.FEMALE,
-    )
+    lang_code = detect(text)
+    voice = texttospeech.VoiceSelectionParams(**TEXTTOSPEECH_PARAMS.get(lang_code))
     audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3
+        audio_encoding=texttospeech.AudioEncoding.OGG_OPUS
     )
     response = client.synthesize_speech(
         request={"input": input_text, "voice": voice, "audio_config": audio_config}
     )
-    filename = f"{tmp_dir}/{update_id}.mp3"
+    filename = f"{tmp_dir}/{update_id}.ogg"
     with open(filename, "wb") as out:
         out.write(response.audio_content)
+    logging.info(f"Audio generated: {filename}")
     return filename
 
 
@@ -77,14 +103,11 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
     await context.bot.send_chat_action(
         chat_id=msg.chat_id, action=ChatAction.UPLOAD_VOICE
     )
-    with tempfile.TemporaryDirectory() as tmp_dir:
+    with tempfile.TemporaryDirectory(prefix="/tmp/") as tmp_dir:
         audio_file = await msg.voice.get_file()
         ogg_filename = f"{tmp_dir}/{audio_file.file_id}.ogg"
-        ogg_audio = await audio_file.download_to_drive(ogg_filename)
-        voice = AudioSegment.from_ogg(ogg_audio)
-        mp3_filename = f"{tmp_dir}/{audio_file.file_id}.mp3"
-        voice.export(mp3_filename, format="mp3")
-        with open(mp3_filename, "rb") as audio_file:
+        await audio_file.download_to_drive(ogg_filename)
+        with open(ogg_filename, "rb") as audio_file:
             transcript = _transcribe_audio(audio_file.read())
             client = firestore.Client()
             doc_ref = client.collection(CHATS).document(str(msg.chat_id))
