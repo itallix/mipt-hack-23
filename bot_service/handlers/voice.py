@@ -13,7 +13,15 @@ from bot_service.utils.markdown import markdown_to_text
 CHATS = "Chats"
 
 
-def _transcribe_file(content) -> str:
+def _transcribe_audio(content: bytes) -> str:
+    """Transcribes audio to text using Google's speech API.
+
+    Args:
+        content: Binary audio content that needs to be transcribed.
+
+    Returns:
+        A text that represents an audio.
+    """
     client = speech.SpeechClient()
     audio = speech.RecognitionAudio(content=content)
 
@@ -33,7 +41,17 @@ def _transcribe_file(content) -> str:
     return transcript
 
 
-def _get_audio_from_text(tmp_dir, update_id, text) -> str:
+def _get_audio_from_text(tmp_dir: str, update_id: int, text: str) -> str:
+    """Generates audio based on text using Google's texttospeech API.
+
+    Args:
+        tmp_dir: Temp directory served as cache for generated audio files.
+        update_id: Unique ID of the current update that used to construct filename.
+        text: Text that needs to be synthesized as audio.
+
+    Returns:
+        A path to the generated audio file
+    """
     client = texttospeech.TextToSpeechClient()
     input_text = texttospeech.SynthesisInput(text=text)
     voice = texttospeech.VoiceSelectionParams(
@@ -54,6 +72,7 @@ def _get_audio_from_text(tmp_dir, update_id, text) -> str:
 
 
 async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handler for voice messages that combines all pieces together."""
     msg = update.effective_message
     await context.bot.send_chat_action(
         chat_id=msg.chat_id, action=ChatAction.UPLOAD_VOICE
@@ -66,7 +85,7 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
         mp3_filename = f"{tmp_dir}/{audio_file.file_id}.mp3"
         voice.export(mp3_filename, format="mp3")
         with open(mp3_filename, "rb") as audio_file:
-            transcript = _transcribe_file(audio_file.read())
+            transcript = _transcribe_audio(audio_file.read())
             client = firestore.Client()
             doc_ref = client.collection(CHATS).document(str(msg.chat_id))
             doc = doc_ref.get()
