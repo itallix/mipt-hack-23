@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -eu
 
-# # Building docker image
+# Building docker image
 docker build -t us-central1-docker.pkg.dev/mipt-hack-01/cloud-run/city-bot .
 
-# # Pushing to Artifactory Registry
+# Pushing to Artifactory Registry
 docker push us-central1-docker.pkg.dev/mipt-hack-01/cloud-run/city-bot
 
 # Redeploying the new revision from the image
