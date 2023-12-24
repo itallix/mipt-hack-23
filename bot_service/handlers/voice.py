@@ -98,7 +98,7 @@ def _get_audio_from_text(tmp_dir: str, update_id: int, text: str) -> str:
 
 
 async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handler for voice messages that combines all pieces together."""
+    """Handler for voice messages that combines all APIs together."""
     msg = update.effective_message
     await context.bot.send_chat_action(
         chat_id=msg.chat_id, action=ChatAction.UPLOAD_VOICE

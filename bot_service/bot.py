@@ -16,6 +16,7 @@ def create_bot_app():
     app = Application.builder().token(telegram_token).build()
     app.add_handler(CommandHandler("start", hdl.show_intro))
     app.add_handler(MessageHandler(filters.VOICE, hdl.handle_voice_message))
+    app.add_handler(MessageHandler(filters.PHOTO, hdl.handle_photo_message))
     # TODO: add error handler with fallback to the team chat
     return app
 
