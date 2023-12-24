@@ -1,11 +1,10 @@
-1.About: https://t.me/MyCityGuideBot 
-A chatbot that helps you explore new landmarks and helps to navigate in an unknown area.
-Reviews: @fancyeagle (customers could sent you bags)
+1.About: https://t.me/MyCityGuideBot
+A perfect assistant for urban adventurers and culture enthusiasts.
 
-2.Description: Hello! I am your personal city guide. What can I do?
-**I can describe the uploaded image 
-**I can answer your voice message. 
-Let me make your journey brighter! To start working, click the "Start" button.
+2.Description: Whether you're navigating through bustling city streets or exploring the serene halls of a museum, I have got you covered. How can I assist?
+**I can describe images you upload.
+**I can respond to your voice messages.
+Let's make your journey brighter! Click "Start" to begin.
 
 3.Description picture: Here we can add a picture or GIF as an example of user interaction with the chatbot
 (picture:640×360 px. GIF:320×180 px; 640×360 px; 960×540 px.)

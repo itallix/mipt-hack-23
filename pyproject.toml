@@ -14,11 +14,18 @@ google-cloud-logging = "^3.9.0"
 python-telegram-bot = "^20.7"
 flask = {extras = ["async"], version = "^3.0.0"}
 gunicorn = {extras = ["gevent"], version = "^21.2.0"}
+google-cloud-texttospeech = "^2.15.0"
+google-cloud-speech = "^2.23.0"
+google-cloud-firestore = "^2.14.0"
+beautifulsoup4 = "^4.12.2"
+markdown = "^3.5.1"
+langdetect = "^1.0.9"
 
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.18.1"
 jupyterlab = "^4.0.9"
+pytest = "^7.4.3"
 
 [build-system]
 requires = ["poetry-core"]

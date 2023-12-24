@@ -11,4 +11,7 @@ docker push us-central1-docker.pkg.dev/mipt-hack-01/cloud-run/city-bot
 gcloud run deploy city-bot \
     --image us-central1-docker.pkg.dev/mipt-hack-01/cloud-run/city-bot \
     --set-secrets=TELEGRAM_TOKEN=telegram-token:latest \
+    --set-env-vars=PROJECT_ID=mipt-hack-01 \
+    --memory 1Gi \
+    --region us-central1 \
     --allow-unauthenticated

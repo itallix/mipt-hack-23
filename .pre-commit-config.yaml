@@ -38,7 +38,10 @@ repos:
     hooks:
       - id: mypy
         args: [--ignore-missing-imports]
-        additional_dependencies: [tokenize-rt==3.2.0, types_requests==2.31.0.2]
+        additional_dependencies:
+          - tokenize-rt==3.2.0
+          - types_requests==2.31.0.2
+          - types-markdown==3.5.0.3
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.32.1
     hooks:

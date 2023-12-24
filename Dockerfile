@@ -9,7 +9,6 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     gcc \
     musl-dev \
-    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip && \
@@ -28,4 +27,4 @@ RUN poetry install \
       --no-root \
     && rm -rf /root/.cache/pypoetry
 
-CMD gunicorn --worker-class gevent --bind :8080 --workers 3 --timeout 0 bot_service.app:app
+CMD gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 bot_service.app:app
