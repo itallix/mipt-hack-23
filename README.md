@@ -37,13 +37,19 @@ poetry run jupyter lab
 
 ## Running bot locally
 
+1. Make sure you have access to the Google project `mipt-hack-01` (contact tg: @fancyeagle if not)
+
+   ```bash
+   gcloud auth application-default login
+   ```
+
 1. Register your bot for testing with [BotFather](https://t.me/BotFather) and save a telegram token as env variable:
 
     ```bash
     export TELEGRAM_TOKEN=some_value
     ```
 
-1. If you didn't create a virtual envrionment with poetry before, create it:
+1. If you didn't create a virtual environment with poetry before, create it:
 
     ```bash
     poetry install
@@ -54,7 +60,9 @@ poetry run jupyter lab
     ```bash
     export FLASK_APP=bot_service.app:app
     export FLASK_RUN_PORT=5005
-    poetry run flask run
+    export FLASK_ENV=development
+    export PROJECT_ID=mipt-hack-01
+    poetry run flask run --reload
     ```
 
 1. Create a tunnel for the local HTTP server from the previous step using `ngrok`, making it accessible from the
