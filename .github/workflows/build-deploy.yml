@@ -3,7 +3,7 @@ name: Build and Deploy to Cloud Run
 on:
   push:
     branches: [ "main" ]
-    paths: 
+    paths:
       - 'bot_service/**/*'
       - 'Dockerfile'
 
@@ -45,10 +45,11 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run/${{ env.SERVICE }}:${{ github.sha }}
-          flags: '--allow-unauthenticated'
-          secrets: |
+          flags: '--allow-unauthenticated --memory=1Gi'
+          secrets: |  # pragma: allowlist secret
             TELEGRAM_TOKEN=telegram-token:latest
+          env_vars: |
+            PROJECT_ID=${{ env.PROJECT_ID }}
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
-
