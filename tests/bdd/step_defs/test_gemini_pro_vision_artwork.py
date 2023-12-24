@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pytest_bdd import given, parsers, scenarios, then, when
 from vertexai.preview.generative_models import GenerationConfig, Image
 
@@ -9,18 +11,26 @@ PAINTING_PROMPT = PREFIX + "author fullname - painting name"
 LANDMARK_PROMPT = PREFIX + "city - landmark name"
 
 
+def _get_image(path: str) -> Image:
+    if Path(path).exists():
+        with open(path, "rb") as f:
+            return Image.from_bytes(f.read())
+    else:
+        raise FileNotFoundError(
+            f"File {path} not found. Follow README for more information"
+        )
+
+
 @given(parsers.parse('The painting "{name}"'))
 def painting(context, name):
     context.prompt = PAINTING_PROMPT
-    with open(f"tests/bdd/data/paintings/{name}", "rb") as f:
-        context.image = Image.from_bytes(f.read())
+    context.image = _get_image(f"tests/bdd/data/paintings/{name}")
 
 
 @given(parsers.parse('The landmark "{name}"'))
 def landmark(context, name):
     context.prompt = LANDMARK_PROMPT
-    with open(f"tests/bdd/data/landmarks/{name}", "rb") as f:
-        context.image = Image.from_bytes(f.read())
+    context.image = _get_image(f"tests/bdd/data/landmarks/{name}")
 
 
 @when("Gemini Pro Vision triggered")
