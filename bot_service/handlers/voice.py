@@ -8,10 +8,10 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 from langdetect import detect
 from telegram import Update
-from telegram.constants import ChatAction
 from telegram.ext import ContextTypes
 from vertexai.preview.generative_models import GenerationConfig, GenerativeModel
 
+from bot_service.utils.actions import send_upload_voice_action
 from bot_service.utils.chat_history import from_json, to_json
 from bot_service.utils.markdown import markdown_to_text
 
@@ -97,12 +97,10 @@ def _get_audio_from_text(tmp_dir: str, update_id: int, text: str) -> str:
     return filename
 
 
+@send_upload_voice_action
 async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handler for voice messages that combines all APIs together."""
     msg = update.effective_message
-    await context.bot.send_chat_action(
-        chat_id=msg.chat_id, action=ChatAction.UPLOAD_VOICE
-    )
     with tempfile.TemporaryDirectory(prefix="/tmp/") as tmp_dir:
         audio_file = await msg.voice.get_file()
         ogg_filename = f"{tmp_dir}/{audio_file.file_id}.ogg"

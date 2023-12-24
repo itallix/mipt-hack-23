@@ -26,6 +26,7 @@ langdetect = "^1.0.9"
 ipython = "^8.18.1"
 jupyterlab = "^4.0.9"
 pytest = "^7.4.3"
+pytest-bdd = "^7.0.1"
 
 [build-system]
 requires = ["poetry-core"]
