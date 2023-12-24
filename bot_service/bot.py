@@ -17,6 +17,7 @@ def create_bot_app():
     app.add_handler(CommandHandler("start", hdl.show_intro))
     app.add_handler(MessageHandler(filters.VOICE, hdl.handle_voice_message))
     app.add_handler(MessageHandler(filters.PHOTO, hdl.handle_photo_message))
+    app.add_handler(CommandHandler("story", hdl.handle_random_story))
     # TODO: add error handler with fallback to the team chat
     return app
 
