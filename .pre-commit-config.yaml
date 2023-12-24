@@ -8,7 +8,7 @@ repos:
         types: [python]
         pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.5.0
     hooks:
       - id: check-added-large-files
       - id: detect-private-key
@@ -19,22 +19,22 @@ repos:
       - id: trailing-whitespace
       - id: check-merge-conflict
   - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
         args: [--profile=black]
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.12.1
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+    rev: 6.1.0
     hooks:
       - id: flake8
         args:
           - --max-line-length=120
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.1.1
+    rev: v1.8.0
     hooks:
       - id: mypy
         args: [--ignore-missing-imports]
@@ -43,11 +43,11 @@ repos:
           - types_requests==2.31.0.2
           - types-markdown==3.5.0.3
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.32.1
+    rev: v0.38.0
     hooks:
       - id: markdownlint
   - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.3.0
+    rev: v1.4.0
     hooks:
       - id: detect-secrets
         args:
