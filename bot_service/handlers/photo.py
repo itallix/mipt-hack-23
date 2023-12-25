@@ -1,9 +1,10 @@
 import tempfile
 
 from telegram import Update
-from telegram.constants import ChatAction
 from telegram.ext import ContextTypes
 from vertexai.preview.generative_models import GenerationConfig, GenerativeModel, Image
+
+from bot_service.utils.actions import send_typing_action
 
 DEFAULT_PROMPT = {
     "ru": "Расскажи мне историю о том, что здесь изображено",
@@ -11,6 +12,7 @@ DEFAULT_PROMPT = {
 }
 
 
+@send_typing_action
 async def handle_photo_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handler for photo messages that asks Gemini Pro Vision to generate a story about the photo.
 
@@ -18,7 +20,6 @@ async def handle_photo_message(update: Update, context: ContextTypes.DEFAULT_TYP
     code will be used.
     """
     msg = update.effective_message
-    await context.bot.send_chat_action(chat_id=msg.chat_id, action=ChatAction.TYPING)
     prompt = msg.caption or DEFAULT_PROMPT[msg.from_user.language_code]
     with tempfile.TemporaryDirectory(prefix="/tmp/") as tmp_dir:
         file_path = f"{tmp_dir}/{msg.id}.jpg"

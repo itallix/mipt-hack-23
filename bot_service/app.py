@@ -1,8 +1,8 @@
 from flask import Flask, request
 from telegram import Update
 from telegram.ext import Application
-from bot_service.bot import create_bot_app
 
+from bot_service.bot import create_bot_app
 
 app = Flask(__name__)
 bot_app: Application = create_bot_app()

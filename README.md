@@ -87,3 +87,30 @@ on each request:
     ```bash
     sh sh/webook.sh delete <TELEGRAM_TOKEN>
     ```
+
+## Running BDD tests
+
+To ensure the model accurately recognizes artwork, a set of Behavior-Driven Development
+(BDD) tests has been created. These tests verify that the model's responses correctly
+match the paintings and landmarks present in the photo.
+
+Before running tests, download [data.zip](https://drive.google.com/file/d/15pBo5il84sa6OylYLhCTTbzAjabUDqNs/view?usp=drive_link)
+and extract it to `tests/bdd` folder.
+
+Running all tests:
+
+   ```bash
+   poetry run pytest tests/bdd
+   ```
+
+Running tests for category:
+
+   ```bash
+   poetry run pytest tests/bdd -k "paintings"
+   poetry run pytest tests/bdd -k "landmarks"
+   ```
+
+It appears that the model incorrectly identified the painting "The Stroll at Giverny"
+by Claude Monet as "Woman and Children in a Field" by Berthe Morisot.
+This misidentification can be due to several factors related to the model's training
+and the inherent challenges in artwork recognition.
