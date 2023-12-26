@@ -1,9 +1,10 @@
 from random import choice
 
 from telegram import Update
-from telegram.constants import ChatAction
 from telegram.ext import ContextTypes
 from vertexai.preview.generative_models import GenerationConfig, GenerativeModel
+
+from bot_service.utils.actions import send_typing_action
 
 CITIES = {
     "ru": [
@@ -74,25 +75,25 @@ CITIES = {
     ],
 }
 
+PROMPT_PREFIX = {
+    "ru": "Расскажи мне забавный факт о городе ",
+    "en": "Tell me a fun fact about ",
+}
 
+
+@send_typing_action
 async def handle_random_story(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handler for the /story command that asks Gemini Pro to generate a random story
 
     A prompt will be used based on the user's profile language code.
     """
-    PROMPT_PREFIX = {
-        "ru": "Расскажи мне забавный факт о городе ",
-        "en": "Tell me a fun fact about ",
-    }
 
     msg = update.message
-    await context.bot.send_chat_action(chat_id=msg.chat_id, action=ChatAction.TYPING)
+    lang_code = msg.from_user.language_code
+    prompt = PROMPT_PREFIX.get(lang_code, "en") + choice(CITIES.get(lang_code, "en"))
     model = GenerativeModel("gemini-pro")
-    prompt = PROMPT_PREFIX.get(msg.from_user.language_code, "en") + choice(
-        CITIES.get(msg.from_user.language_code, "en")
-    )
     response = model.generate_content(
         prompt,
         generation_config=GenerationConfig(temperature=0.9, top_k=40, top_p=0.5),
     )
-    await msg.reply_html(f"{response.text}")
+    await msg.reply_markdown(f"{response.text}")
