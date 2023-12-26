@@ -1,11 +1,79 @@
+from random import choice
+
 from telegram import Update
 from telegram.constants import ChatAction
 from telegram.ext import ContextTypes
 from vertexai.preview.generative_models import GenerationConfig, GenerativeModel
 
+cities_ru = [
+    "Токио",
+    "Чунцин",
+    "Дели",
+    "Шанхай",
+    "Дакка",
+    "Сан-Паулу",
+    "Мехико",
+    "Нью-Йорк",
+    "Мумбаи",
+    "Манила",
+    "Сеул",
+    "Пекин",
+    "Брисбен",
+    "Чэнду",
+    "Сидней",
+    "Тяньцзинь",
+    "Мельбурн",
+    "Киншаса",
+    "Ухань",
+    "Стамбул",
+    "Далоа",
+    "Анкоридж",
+    "Дубай",
+    "Москва",
+    "Аделаида",
+    "Бамако",
+    "Александрия",
+    "Баку",
+    "Габу",
+    "Давао",
+]
+
+cities_en = [
+    "Tokyo",
+    "Chongqing",
+    "Delhi",
+    "Shanghai",
+    "Dhaka",
+    "Sao Paulo",
+    "Mexico City",
+    "New York",
+    "Mumbai",
+    "Manila",
+    "Seoul",
+    "Beijing",
+    "Brisbane",
+    "Chengdu",
+    "Sydney",
+    "Tianjin",
+    "Melbourne",
+    "Kinshasa",
+    "Wuhan",
+    "Istanbul",
+    "Daloa",
+    "Anchorage",
+    "Dubai",
+    "Moscow",
+    "Adelaide",
+    "Bamako",
+    "Alexandria",
+    "Baku",
+    "Gabu",
+    "Davao",
+]
+
 DEFAULT_PROMPT = {
-    "ru": "Расскажи мне забавный факт о случайном городе",
-    "en": "Tell me a fun fact about some random city",
+    "ru": f"Расскажи мне забавный факт о городе {choice(cities_ru)}",
+    "en": f"Tell me a fun fact about {choice(cities_en)}",
 }
 
 
