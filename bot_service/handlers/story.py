@@ -80,15 +80,17 @@ async def handle_random_story(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     A prompt will be used based on the user's profile language code.
     """
-    DEFAULT_PROMPT = {
-        "ru": f"Расскажи мне забавный факт о городе {choice(CITIES['ru'])}",
-        "en": f"Tell me a fun fact about {choice(CITIES['en'])}",
+    PROMPT_PREFIX = {
+        "ru": "Расскажи мне забавный факт о городе ",
+        "en": "Tell me a fun fact about ",
     }
 
     msg = update.message
     await context.bot.send_chat_action(chat_id=msg.chat_id, action=ChatAction.TYPING)
     model = GenerativeModel("gemini-pro")
-    prompt = DEFAULT_PROMPT.get(msg.from_user.language_code, "en")
+    prompt = PROMPT_PREFIX.get(msg.from_user.language_code, "en") + choice(
+        CITIES.get(msg.from_user.language_code, "en")
+    )
     response = model.generate_content(
         prompt,
         generation_config=GenerationConfig(temperature=0.9, top_k=40, top_p=0.5),
