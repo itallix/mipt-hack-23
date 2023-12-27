@@ -121,7 +121,7 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
             audio_file_path = _get_audio_from_text(
                 tmp_dir, update.update_id, markdown_to_text(response.text)
             )
-            await msg.reply_voice(audio_file_path)
+            await msg.reply_voice(audio_file_path, write_timeout=40)
             if doc.exists:
                 doc_ref.update(
                     {"history": firestore.ArrayUnion(to_json(chat.history[-2:]))}

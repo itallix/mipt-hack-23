@@ -1,4 +1,33 @@
-# Telegram Bot powered by Gemini Pro
+# MyCityGuideBot
+
+tg: [@MyCityGuideBot](https://t.me/MyCityGuideBot)
+
+<img src="static/logo.jpg" alt="MyCityGuideBot" height="400">
+
+A perfect assistant for urban adventurers and culture enthusiasts
+
+**Features:**
+
+- Responds with audio to voice message
+- Generates description for uploaded picture
+- `/story` - Discover an intriguing fact about a random city
+- Supports 2 languages: English & Russian
+
+Demo slide deck is available via [link](https://drive.google.com/file/d/1En0Qffk7cH2iQECuwknx1lKtRW8BZT4w/view?usp=sharing)
+
+## Architecture
+
+<img src="static/architecture.png" alt="architecture" height="600">
+
+## Sequence diagrams
+
+### Voice flow
+
+<img src="static/seq_voice.png" alt="voice sequence diagram" height="600">
+
+### Image flow
+
+<img src="static/seq_image.png" alt="voice sequence diagram" height="400">
 
 ## Prerequisites
 
