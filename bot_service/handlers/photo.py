@@ -31,9 +31,9 @@ async def _reply(msg: Message, text: str):
 
 async def _try_markdown_reply(msg, response_text):
     try:
-        await msg.reply_markdown(response_text)
+        await msg.reply_markdown(response_text, write_timeout=10)
     except BadRequest:
-        await msg.reply_text(response_text)
+        await msg.reply_text(response_text, write_timeout=10)
 
 
 @send_typing_action
